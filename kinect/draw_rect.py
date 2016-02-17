@@ -5,22 +5,10 @@ import numpy as np
 threshold = 100
 current_depth = 650
 adj = 8
-
-params = cv2.SimpleBlobDetector_Params()
- 
-# Change thresholds
-params.minThreshold = 10;
-params.maxThreshold = 255;
-# Filter by Area.
-params.filterByArea = True
-params.minArea = 150
  
 # Create a detector with the parameters
 ver = (cv2.__version__).split('.')
-if int(ver[0]) < 3 :
-	detector = cv2.SimpleBlobDetector(params)
-else : 
-	detector = cv2.SimpleBlobDetector_create(params)
+#print ver
 
 #function to get RGB image from kinect
 def get_video():
@@ -71,18 +59,13 @@ if __name__ == "__main__":
 		cv2.CHAIN_APPROX_SIMPLE)
 		#cnts = cnts[1]
 		for c in cnts:
-			#find hand and draw rect around hand
-			epsilon = 0.1*cv2.arcLength(c,True)
-			approx = cv2.approxPolyDP(c,epsilon,True)
-			print approx
-			x,y,w,h = cv2.boundingRect(c)
-			cv2.rectangle(img,(x-adj,y-adj),(x+w-adj,y+h-adj),(255,255,0),3)
 			# compute the center of the contour
 			M = cv2.moments(c)
 			if M["m00"] > 0:
 				cX = int(M["m10"] / M["m00"])-8
 				cY = int(M["m01"] / M["m00"])-8
-				cv2.circle(frame, (cX, cY), 50, (255, 255, 255), 1)
+				#cv2.circle(frame, (cX, cY), 50, (255, 255, 255), 1)
+				cv2.rectangle(frame,(cX-50,cY-50),(cX+50,cY+50),(255,255,0),1)
 				
 		
 		cv2.imshow('RGB image',frame)
